@@ -2,6 +2,5 @@ namespace LastHitPlugin.Core;
 
 internal interface IJobLimitBreakModule
 {
-    bool Handles(uint classJobId);
-    uint GetLimitBreakActionId();
+    bool TryResolve(uint classJobId, out uint actionId);
 }

@@ -11,6 +11,9 @@ internal sealed class LastHitController : IDisposable
 {
     private readonly Configuration config;
 
+    public DateTime? LastFiredUtc { get; private set; }
+    public IBattleChara? LastResolvedTarget { get; private set; }
+
     public LastHitController(Configuration config)
     {
         this.config = config;
@@ -24,21 +27,32 @@ internal sealed class LastHitController : IDisposable
 
     private void OnTick(IFramework _)
     {
-        if (!config.Enabled) return;
-        if (!Player.Available) return;
+        if (!config.Enabled) { LastResolvedTarget = null; return; }
+        if (!Player.Available) { LastResolvedTarget = null; return; }
         if (!EzThrottler.Throttle("LastHit.Tick", 100)) return;
 
         var target = ResolveTarget();
+        LastResolvedTarget = target;
         if (target == null) return;
 
-        var hpPct = target.MaxHp == 0 ? 0f : 100f * target.CurrentHp / target.MaxHp;
-        if (hpPct >= config.HpThresholdPercent) return;
+        if (!IsBelowThreshold(target)) return;
 
-        var module = JobModuleRegistry.For(Player.Object!.ClassJob.RowId);
-        if (module == null) return;
+        var actionId = JobModuleRegistry.ResolveActionId(Player.Object!.ClassJob.RowId);
+        if (actionId == 0) return;
 
         if (!EzThrottler.Throttle("LastHit.Fire", 1500)) return;
-        ActionExec.TryUse(module.GetLimitBreakActionId());
+        if (ActionExec.TryUse(actionId))
+            LastFiredUtc = DateTime.UtcNow;
+    }
+
+    private bool IsBelowThreshold(IBattleChara target)
+    {
+        if (config.ThresholdMode == ThresholdMode.Absolute)
+            return target.CurrentHp < config.HpThresholdAbsolute;
+
+        if (target.MaxHp == 0) return false;
+        var pct = 100f * target.CurrentHp / target.MaxHp;
+        return pct < config.HpThresholdPercent;
     }
 
     private IBattleChara? ResolveTarget()
