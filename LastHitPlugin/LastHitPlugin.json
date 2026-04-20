@@ -1,12 +1,15 @@
 {
   "Author": "XeldarAlz",
   "Name": "LastHit",
-  "Punchline": "Auto-fires your PvP Limit Break when an enemy is about to die.",
-  "Description": "PvP-only plugin. Watches enemy HP in PvP and fires your job's PvP Limit Break when HP drops below a configurable, per-job threshold. Optionally auto-selects the lowest-HP hostile in range. Use /lasthit to open.",
+  "Punchline": "Fires your PvP Limit Break at a configurable HP threshold to last hit enemies.",
+  "Description": "Fires your job's PvP Limit Break when the target's HP drops below a configurable threshold. Threshold is set as a percent of max HP or an absolute HP value. Optionally auto-selects the lowest-HP hostile in range when no manual target is set. Commands: /lasthit, /lasthit config.",
   "ApplicableVersion": "any",
+  "IconUrl": "https://raw.githubusercontent.com/XeldarAlz/FFXIV-LastHit/master/LastHitPlugin/images/icon.png",
+  "RepoUrl": "https://github.com/XeldarAlz/FFXIV-LastHit",
   "Tags": [
     "pvp",
     "limit break",
-    "combat"
+    "combat",
+    "automation"
   ]
 }
