@@ -1,4 +1,6 @@
+using System.IO;
 using Dalamud.Game.Command;
+using Dalamud.Interface.Textures;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
@@ -23,6 +25,8 @@ public sealed class Plugin : IDalamudPlugin
 
     public Configuration Configuration { get; init; }
 
+    internal static ISharedImmediateTexture? PluginIcon { get; private set; }
+
     public readonly WindowSystem WindowSystem = new("LastHitPlugin");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
@@ -33,6 +37,10 @@ public sealed class Plugin : IDalamudPlugin
         ECommonsMain.Init(PluginInterface, this);
 
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+
+        var iconPath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName ?? ".", "images", "icon.png");
+        if (File.Exists(iconPath))
+            PluginIcon = TextureProvider.GetFromFile(iconPath);
 
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this);

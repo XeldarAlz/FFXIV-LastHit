@@ -53,9 +53,18 @@ public class MainWindow : Window, IDisposable
 
     private void DrawTitleBar()
     {
-        using (ImRaii.PushFont(UiBuilder.IconFont))
-        using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudRed))
-            ImGui.TextUnformatted(FontAwesomeIcon.Crosshairs.ToIconString());
+        var iconSize = 22f * ImGuiHelpers.GlobalScale;
+        var iconTex = Plugin.PluginIcon?.GetWrapOrDefault();
+        if (iconTex != null)
+        {
+            ImGui.Image(iconTex.Handle, new Vector2(iconSize, iconSize));
+        }
+        else
+        {
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudRed))
+                ImGui.TextUnformatted(FontAwesomeIcon.Crosshairs.ToIconString());
+        }
         ImGui.SameLine();
         ImGui.AlignTextToFramePadding();
 

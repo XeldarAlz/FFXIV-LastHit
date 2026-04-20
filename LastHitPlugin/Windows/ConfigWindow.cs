@@ -25,12 +25,30 @@ public class ConfigWindow : Window, IDisposable
 
     public override void Draw()
     {
+        DrawTitleBar();
+        ImGui.Spacing();
         DrawMasterButton();
         ImGui.Spacing();
         ImGui.Spacing();
         DrawThresholdSection();
         ImGui.Spacing();
         DrawTargetingSection();
+    }
+
+    private static void DrawTitleBar()
+    {
+        var iconSize = 22f * ImGuiHelpers.GlobalScale;
+        var iconTex = Plugin.PluginIcon?.GetWrapOrDefault();
+        if (iconTex != null)
+        {
+            ImGui.Image(iconTex.Handle, new Vector2(iconSize, iconSize));
+            ImGui.SameLine();
+            ImGui.AlignTextToFramePadding();
+        }
+        ImGui.SetWindowFontScale(1.10f);
+        ImGui.TextUnformatted("LastHit Settings");
+        ImGui.SetWindowFontScale(1.0f);
+        ImGui.Separator();
     }
 
     private void DrawMasterButton()

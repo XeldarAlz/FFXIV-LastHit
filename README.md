@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="LastHitPlugin/images/icon.png" width="180" alt="LastHit icon" />
+  <img src="LastHitPlugin/images/icon.png" width="220" alt="LastHit icon" />
 </p>
 
 <h1 align="center">LastHit</h1>
