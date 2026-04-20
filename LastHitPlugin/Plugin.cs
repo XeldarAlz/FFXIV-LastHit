@@ -5,6 +5,7 @@ using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using ECommons;
+using LastHitPlugin.Core;
 using LastHitPlugin.Windows;
 
 namespace LastHitPlugin;
@@ -26,6 +27,7 @@ public sealed class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new("LastHitPlugin");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
+    private LastHitController Controller { get; init; }
 
     public Plugin()
     {
@@ -38,6 +40,7 @@ public sealed class Plugin : IDalamudPlugin
 
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this, goatImagePath);
+        Controller = new LastHitController(Configuration);
 
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
@@ -74,6 +77,7 @@ public sealed class Plugin : IDalamudPlugin
 
         ConfigWindow.Dispose();
         MainWindow.Dispose();
+        Controller.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
 
