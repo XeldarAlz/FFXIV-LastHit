@@ -12,7 +12,7 @@
 
 ## What it does
 
-Monitors enemy HP during PvP. When the target's HP drops below the configured threshold, uses your job's PvP Limit Break. Good for classes like Ninja or Machinist.
+Monitors enemy HP during PvP. When the target's HP drops below the configured threshold, uses your job's PvP Limit Break. Good for classes like Ninja or Machinist to auto kill enemies.
 
 ## Features
 
@@ -35,12 +35,6 @@ LastHit is distributed through a custom Dalamud plugin repository.
 3. Open `/xlplugins` → **All Plugins**, search for **LastHit**, and install.
 
 Updates are delivered automatically whenever a new release is cut.
-
-### Install from source (developers only)
-
-1. Build the solution in `Release`.
-2. `/xlsettings` → **Experimental** → add the full path to `LastHitPlugin.dll` under **Dev Plugin Locations**. Build output is at `LastHitPlugin/bin/x64/Release/LastHitPlugin/`.
-3. `/xlplugins` → **Dev Tools → Installed Dev Plugins** → enable **LastHit**.
 
 ## Commands
 
