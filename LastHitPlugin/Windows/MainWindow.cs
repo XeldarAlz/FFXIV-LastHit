@@ -188,7 +188,8 @@ public class MainWindow : Window, IDisposable
         var row = actionSheet?.GetRowOrDefault(actionId);
         var actionName = row?.Name.ToString() ?? $"Action {actionId}";
         var iconId = row?.Icon ?? 0;
-        var ready = ActionExec.IsReady(actionId);
+        var targetEntity = ctrl.LastResolvedTarget?.EntityId ?? 0xE000_0000u;
+        var ready = ActionExec.IsReady(actionId, targetEntity);
 
         var iconSize = 56f * ImGuiHelpers.GlobalScale;
         var borderColor = ready ? ImGuiColors.ParsedGreen : ImGuiColors.DalamudGrey3;

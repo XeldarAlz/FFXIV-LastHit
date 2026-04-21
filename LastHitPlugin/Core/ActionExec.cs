@@ -4,21 +4,24 @@ namespace LastHitPlugin.Core;
 
 internal static unsafe class ActionExec
 {
-    public static bool TryUse(uint actionId)
+    private const ulong NoTarget = 0xE000_0000UL;
+
+    public static bool TryUse(uint actionId, ulong targetId = NoTarget)
     {
         if (actionId == 0) return false;
         var am = ActionManager.Instance();
         if (am == null) return false;
         if (am->AnimationLock > 0f) return false;
-        if (am->GetActionStatus(ActionType.Action, actionId) != 0) return false;
-        return am->UseAction(ActionType.Action, actionId);
+        if (am->GetActionStatus(ActionType.Action, actionId, targetId) != 0) return false;
+        return am->UseAction(ActionType.Action, actionId, targetId);
     }
 
-    public static uint GetStatus(uint actionId)
+    public static uint GetStatus(uint actionId, ulong targetId = NoTarget)
     {
         var am = ActionManager.Instance();
-        return am == null ? uint.MaxValue : am->GetActionStatus(ActionType.Action, actionId);
+        return am == null ? uint.MaxValue : am->GetActionStatus(ActionType.Action, actionId, targetId);
     }
 
-    public static bool IsReady(uint actionId) => actionId != 0 && GetStatus(actionId) == 0;
+    public static bool IsReady(uint actionId, ulong targetId = NoTarget)
+        => actionId != 0 && GetStatus(actionId, targetId) == 0;
 }

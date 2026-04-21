@@ -18,6 +18,7 @@ internal sealed class LastHitController : IDisposable
     {
         this.config = config;
         Svc.Framework.Update += OnTick;
+        Svc.Log.Info("[LastHit] controller online — build " + typeof(LastHitController).Assembly.GetName().Version);
     }
 
     public void Dispose()
@@ -40,13 +41,21 @@ internal sealed class LastHitController : IDisposable
         var actionIds = JobModuleRegistry.ResolveActionIds(Player.Object!.ClassJob.RowId);
         if (actionIds.Count == 0) return;
 
+        var targetId = (ulong)target.EntityId;
         foreach (var actionId in actionIds)
         {
-            if (!ActionExec.IsReady(actionId)) continue;
+            if (!ActionExec.IsReady(actionId, targetId)) continue;
             if (!EzThrottler.Throttle($"LastHit.Fire.{actionId}", 500)) continue;
-            if (ActionExec.TryUse(actionId))
+
+            // PvP LBs resolve against the player's hard target, ignoring the targetId parameter.
+            // Ensure the hard target matches what we picked so the LB lands on the right enemy.
+            if (Svc.Targets.Target?.EntityId != target.EntityId)
+                Svc.Targets.Target = target;
+
+            if (ActionExec.TryUse(actionId, targetId))
             {
                 LastFiredUtc = DateTime.UtcNow;
+                Svc.Log.Info($"[LastHit] fired action {actionId} on entity 0x{target.EntityId:X}");
                 return;
             }
         }
