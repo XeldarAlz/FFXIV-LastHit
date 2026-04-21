@@ -24,10 +24,23 @@ Monitors enemy HP during PvP. When the target's HP drops below the configured th
 
 ## Install
 
-1. `/xlsettings` → **Experimental** → add the full path to `LastHitPlugin.dll` under **Dev Plugin Locations**.
-2. `/xlplugins` → **Dev Tools → Installed Dev Plugins** → enable **LastHit**.
+LastHit is distributed through a custom Dalamud plugin repository.
 
-Build output is at `LastHitPlugin/bin/x64/Release/LastHitPlugin/`.
+1. In-game, run `/xlsettings` → **Experimental**.
+2. Under **Custom Plugin Repositories**, paste:
+   ```
+   https://raw.githubusercontent.com/XeldarAlz/FFXIV-LastHit/master/repo.json
+   ```
+   Tick **Enabled**, click the **+**, then **Save and Close**.
+3. Open `/xlplugins` → **All Plugins**, search for **LastHit**, and install.
+
+Updates are delivered automatically whenever a new release is cut.
+
+### Install from source (developers only)
+
+1. Build the solution in `Release`.
+2. `/xlsettings` → **Experimental** → add the full path to `LastHitPlugin.dll` under **Dev Plugin Locations**. Build output is at `LastHitPlugin/bin/x64/Release/LastHitPlugin/`.
+3. `/xlplugins` → **Dev Tools → Installed Dev Plugins** → enable **LastHit**.
 
 ## Commands
 

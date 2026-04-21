@@ -1,0 +1,104 @@
+name: Release LastHitPlugin
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g. 1.0.0.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-2022
+
+    env:
+      Solution_Name: LastHitPlugin
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          ref: master
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Resolve version
+        id: ver
+        shell: pwsh
+        run: |
+          if ('${{ github.event_name }}' -eq 'push') {
+            $v = '${{ github.ref_name }}'.TrimStart('v')
+          } else {
+            $v = '${{ github.event.inputs.version }}'
+          }
+          "VERSION=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "TAG=v$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Stamp version into csproj
+        shell: pwsh
+        run: |
+          $path = 'LastHitPlugin/LastHitPlugin.csproj'
+          $xml = [xml](Get-Content -Raw -Path $path)
+          $xml.Project.PropertyGroup.Version = '${{ steps.ver.outputs.VERSION }}'
+          $xml.Save((Resolve-Path $path).Path)
+
+      - name: Download Dalamud
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile dalamud.zip
+          Expand-Archive -Force dalamud.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Package latest.zip
+        shell: pwsh
+        run: |
+          $out = 'LastHitPlugin/bin/x64/Release/LastHitPlugin'
+          if (-not (Test-Path $out)) { throw "Build output not found at $out" }
+          Compress-Archive -Path "$out/*" -DestinationPath 'latest.zip' -Force
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ver.outputs.TAG }}
+          name: ${{ steps.ver.outputs.TAG }}
+          files: latest.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+
+      - name: Update repo.json
+        shell: pwsh
+        run: |
+          $v = '${{ steps.ver.outputs.VERSION }}'
+          $path = 'repo.json'
+          $json = Get-Content -Raw -Path $path | ConvertFrom-Json
+          $json[0].AssemblyVersion = $v
+          $json[0].TestingAssemblyVersion = $v
+          $json[0] | Add-Member -NotePropertyName 'LastUpdate' -NotePropertyValue ([string][int][double]::Parse((Get-Date -UFormat %s))) -Force
+          ($json | ConvertTo-Json -Depth 10) | Set-Content -Path $path -Encoding utf8
+
+      - name: Commit repo.json to master
+        shell: pwsh
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add repo.json LastHitPlugin/LastHitPlugin.csproj
+          if (git status --porcelain) {
+            git commit -m "Release ${{ steps.ver.outputs.TAG }}: bump repo.json"
+            git push origin HEAD:master
+          } else {
+            Write-Host 'No changes to commit.'
+          }
