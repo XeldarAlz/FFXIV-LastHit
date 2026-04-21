@@ -143,7 +143,7 @@ public class MainWindow : Window, IDisposable
         var candidates = TargetSelector.ScanHostiles(cfg.AutoSelectRangeYalms);
         if (candidates.Count == 0)
         {
-            DrawEmptyCard($"Scanning — no hostile targets within {cfg.AutoSelectRangeYalms:F0}y.",
+            DrawEmptyCard("target", $"Scanning — no hostile targets within {cfg.AutoSelectRangeYalms:F0}y.",
                 FontAwesomeIcon.Satellite);
             return;
         }
@@ -163,21 +163,40 @@ public class MainWindow : Window, IDisposable
         }
     }
 
-    private void DrawEmptyCard(string message, FontAwesomeIcon icon)
+    private void DrawEmptyCard(string id, string message, FontAwesomeIcon icon)
     {
-        using var style = Styling.PushCardStyle();
+        var iconText = icon.ToIconString();
+        float iconWidth;
+        using (ImRaii.PushFont(UiBuilder.IconFont))
+            iconWidth = ImGui.CalcTextSize(iconText).X;
+
+        var style = ImGui.GetStyle();
+        var cardPadX = 10f * ImGuiHelpers.GlobalScale;
+        var cardPadY = 8f * ImGuiHelpers.GlobalScale;
+        var avail = ImGui.GetContentRegionAvail().X;
+        var textWrapWidth = MathF.Max(40f, avail - cardPadX * 2 - iconWidth - style.ItemSpacing.X);
+        var textSize = ImGui.CalcTextSize(message, false, textWrapWidth);
+
+        var cardHeight = MathF.Max(
+            textSize.Y + cardPadY * 2 + 4f * ImGuiHelpers.GlobalScale,
+            44f * ImGuiHelpers.GlobalScale);
+
+        using var cardStyle = Styling.PushCardStyle();
         using (ImRaii.PushColor(ImGuiCol.ChildBg, Styling.CardBgSoft))
         using (ImRaii.PushColor(ImGuiCol.Border, Styling.CardBorderDim))
-        using (ImRaii.Child("##empty", new Vector2(-1, 52f * ImGuiHelpers.GlobalScale), true,
+        using (ImRaii.Child($"##empty_{id}", new Vector2(-1, cardHeight), true,
                    ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
         {
-            ImGui.Spacing();
             using (ImRaii.PushFont(UiBuilder.IconFont))
             using (ImRaii.PushColor(ImGuiCol.Text, Styling.TextMuted))
-                ImGui.TextUnformatted(icon.ToIconString());
+                ImGui.TextUnformatted(iconText);
             ImGui.SameLine();
             using (ImRaii.PushColor(ImGuiCol.Text, Styling.TextDim))
+            {
+                ImGui.PushTextWrapPos(0f);
                 ImGui.TextUnformatted(message);
+                ImGui.PopTextWrapPos();
+            }
         }
     }
 
@@ -353,7 +372,7 @@ public class MainWindow : Window, IDisposable
 
         if (actionId == 0)
         {
-            DrawEmptyCard("No PvP Limit Break mapped for current job.", FontAwesomeIcon.Ban);
+            DrawEmptyCard("lb", "No PvP Limit Break mapped for current job.", FontAwesomeIcon.Ban);
             return;
         }
 
