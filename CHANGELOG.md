@@ -2,6 +2,12 @@
 
 All notable changes to LastHit are documented here.
 
+## v0.0.0.5
+
+### Added
+- **Defensive/support LB detection.** Jobs whose PvP Limit Break is defensive or support-focused (Paladin, Warrior, Bard, Black Mage, Astrologian, Dancer, Reaper, Sage, Pictomancer) are now recognized as out of scope. The Limit Break card surfaces an amber `DEFENSIVE` pill with a "Support LB — not auto-fired" note instead of an HP-threshold label, so players don't expect the plugin to fire on those jobs.
+- README job tables now include a 🛡 status for support LBs alongside ✅ / ❔.
+
 ## v0.0.0.4
 
 ### Fixed

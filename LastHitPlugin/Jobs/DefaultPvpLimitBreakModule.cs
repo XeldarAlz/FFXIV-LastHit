@@ -14,6 +14,19 @@ internal sealed class DefaultPvpLimitBreakModule : IJobLimitBreakModule
     private const uint UnsetRowId = uint.MaxValue;
     private static readonly uint[] Empty = System.Array.Empty<uint>();
 
+    private static readonly HashSet<uint> SupportJobs = new()
+    {
+        19, // PLD — Phalanx
+        21, // WAR — Primal Scream
+        23, // BRD — Final Fantasia
+        25, // BLM — Soul Resonance
+        33, // AST — Celestial River
+        38, // DNC — Contradance
+        39, // RPR — Tenebrae Lemurum
+        40, // SGE — Mesotes
+        42, // PCT — Advent of Chocobastion
+    };
+
     private readonly Dictionary<uint, uint[]> cache;
 
     public DefaultPvpLimitBreakModule()
@@ -25,6 +38,9 @@ internal sealed class DefaultPvpLimitBreakModule : IJobLimitBreakModule
 
     public IReadOnlyList<uint> Resolve(uint classJobId)
         => cache.TryGetValue(classJobId, out var ids) ? ids : Empty;
+
+    public LbKind Classify(uint classJobId)
+        => SupportJobs.Contains(classJobId) ? LbKind.Support : LbKind.Offensive;
 
     private static Dictionary<uint, uint[]> BuildCache()
     {

@@ -10,6 +10,8 @@
 
 Monitors enemy HP during PvP. When the target's HP drops below the configured threshold, uses your job's PvP Limit Break. Good for classes like Ninja or Machinist to auto kill enemies.
 
+Jobs whose PvP Limit Break is defensive or support-focused (e.g., Paladin's Phalanx) are flagged in the status window and not auto-fired — the low-HP-enemy gate doesn't apply to them.
+
 ## Features
 
 - Configurable threshold, expressed as either a percent of max HP or an absolute HP value.
@@ -49,48 +51,50 @@ Updates are delivered automatically whenever a new release is cut.
 
 ## Job compatibility
 
-PvP Limit Breaks are resolved dynamically from game data, so every job is wired up automatically. The table below tracks what has actually been verified in live PvP matches. If you test a job, please open an issue or PR so this list can be updated.
+PvP Limit Breaks are resolved dynamically from game data, so every job is wired up automatically. Jobs whose LB is defensive or support-focused are flagged in the status window and not auto-fired — the low-HP-enemy gate doesn't apply to them. The table below tracks what has actually been verified in live PvP matches. If you test a job, please open an issue or PR so this list can be updated.
+
+**Legend:** ✅ confirmed working · ❔ not tested yet · 🛡 defensive/support — not auto-fired (out of scope)
 
 ### Tanks
 | Job | Status | Notes |
 |---|---|---|
-| Paladin | ❔ | Not tested yet |
-| Warrior | ❔ | Not tested yet |
-| Dark Knight | ❔ | Not tested yet |
-| Gunbreaker | ❔ | Not tested yet |
+| Paladin | 🛡 | Phalanx — defensive (party barrier + Stoneskin) |
+| Warrior | 🛡 | Primal Scream — defensive |
+| Dark Knight | ✅ | Confirmed working in CC |
+| Gunbreaker | ✅ | Confirmed working in CC |
 
 ### Healers
 | Job | Status | Notes |
 |---|---|---|
-| White Mage | ❔ | Not tested yet |
+| White Mage | ✅ | Confirmed working in CC |
 | Scholar | ❔ | Not tested yet |
-| Astrologian | ❔ | Not tested yet |
-| Sage | ❔ | Not tested yet |
+| Astrologian | 🛡 | Celestial River — support |
+| Sage | 🛡 | Mesotes — support |
 
 ### Melee DPS
 | Job | Status | Notes |
 |---|---|---|
-| Monk | ❔ | Not tested yet |
+| Monk | ✅ | Confirmed working in CC |
 | Dragoon | ✅ | Confirmed working in CC |
 | Ninja | ✅ | Confirmed working in CC |
-| Samurai | ❔ | Not tested yet |
-| Reaper | ❔ | Not tested yet |
-| Viper | ❔ | Not tested yet |
+| Samurai | ✅ | Confirmed working in CC |
+| Reaper | 🛡 | Tenebrae Lemurum — support |
+| Viper | ✅ | Confirmed working in CC |
 
 ### Physical Ranged DPS
 | Job | Status | Notes |
 |---|---|---|
-| Bard | ❔ | Not tested yet |
+| Bard | 🛡 | Final Fantasia — support |
 | Machinist | ✅ | Confirmed working in CC |
-| Dancer | ❔ | Not tested yet |
+| Dancer | 🛡 | Contradance — support |
 
 ### Magical Ranged DPS
 | Job | Status | Notes |
 |---|---|---|
-| Black Mage | ❔ | Not tested yet |
+| Black Mage | 🛡 | Soul Resonance — support |
 | Summoner | ❔ | Not tested yet |
 | Red Mage | ❔ | Not tested yet |
-| Pictomancer | ❔ | Not tested yet |
+| Pictomancer | 🛡 | Advent of Chocobastion — defensive |
 
 ## License
 

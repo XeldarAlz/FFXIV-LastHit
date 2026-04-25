@@ -26,4 +26,14 @@ internal static class JobModuleRegistry
         var list = ResolveActionIds(classJobId);
         return list.Count > 0 ? list[0] : 0u;
     }
+
+    public static LbKind Classify(uint classJobId)
+    {
+        foreach (var m in Modules)
+        {
+            if (m.Resolve(classJobId).Count > 0)
+                return m.Classify(classJobId);
+        }
+        return LbKind.Offensive;
+    }
 }

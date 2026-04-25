@@ -376,6 +376,9 @@ public class MainWindow : Window, IDisposable
             return;
         }
 
+        var kind = JobModuleRegistry.Classify(jobId);
+        var isSupport = kind == LbKind.Support;
+
         var actionSheet = Svc.Data.GetExcelSheet<LuminaAction>();
         var row = actionSheet?.GetRowOrDefault(actionId);
         var actionName = row?.Name.ToString() ?? $"Action {actionId}";
@@ -383,7 +386,7 @@ public class MainWindow : Window, IDisposable
         var targetEntity = ctrl.LastResolvedTarget?.EntityId ?? 0xE000_0000u;
         var ready = ActionExec.IsReady(actionId, targetEntity);
         var target = ctrl.LastResolvedTarget;
-        var wouldFire = ready && target != null && !target.IsDead
+        var wouldFire = !isSupport && ready && target != null && !target.IsDead
             && IsBelowThreshold(target.CurrentHp, target.MaxHp, cfg);
         var firing = wouldFire && cfg.Enabled;
 
@@ -411,13 +414,18 @@ public class MainWindow : Window, IDisposable
                 using (ImRaii.PushColor(ImGuiCol.Text, Styling.TextStrong))
                     ImGui.TextUnformatted(actionName);
 
-                var threshLabel = cfg.ThresholdMode == ThresholdMode.Percent
-                    ? $"Fires below {cfg.HpThresholdPercent:F0}% HP"
-                    : $"Fires below {cfg.HpThresholdAbsolute:N0} HP";
-                using (ImRaii.PushColor(ImGuiCol.Text, Styling.TextDim))
+                var threshLabel = isSupport
+                    ? "Support LB — not auto-fired"
+                    : cfg.ThresholdMode == ThresholdMode.Percent
+                        ? $"Fires below {cfg.HpThresholdPercent:F0}% HP"
+                        : $"Fires below {cfg.HpThresholdAbsolute:N0} HP";
+                using (ImRaii.PushColor(ImGuiCol.Text, isSupport ? Styling.AccentAmber : Styling.TextDim))
                     ImGui.TextUnformatted(threshLabel);
 
-                DrawLbStatusPill(firing, wouldFire, ready, cfg.Enabled);
+                if (isSupport)
+                    DrawLbSupportPill();
+                else
+                    DrawLbStatusPill(firing, wouldFire, ready, cfg.Enabled);
             }
         }
     }
@@ -455,6 +463,17 @@ public class MainWindow : Window, IDisposable
             }
         }
         ImGui.Dummy(new Vector2(size, size));
+    }
+
+    private static void DrawLbSupportPill()
+    {
+        ImGui.Spacing();
+        using (ImRaii.PushFont(UiBuilder.IconFont))
+        using (ImRaii.PushColor(ImGuiCol.Text, Styling.AccentAmber))
+            ImGui.TextUnformatted(FontAwesomeIcon.InfoCircle.ToIconString());
+        ImGui.SameLine();
+        using (ImRaii.PushColor(ImGuiCol.Text, Styling.AccentAmber))
+            ImGui.TextUnformatted("DEFENSIVE");
     }
 
     private static void DrawLbStatusPill(bool firing, bool wouldFire, bool ready, bool enabled)
