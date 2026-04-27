@@ -4,6 +4,18 @@
 
 <h1 align="center">PVP Auto LB</h1>
 
+<p align="center">
+  <a href="https://github.com/XeldarAlz/FFXIV-PvPAutoLB/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/XeldarAlz/FFXIV-PvPAutoLB?style=flat-square&color=blue"></a>
+  <a href="https://github.com/XeldarAlz/FFXIV-PvPAutoLB/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/XeldarAlz/FFXIV-PvPAutoLB/total?style=flat-square&color=blue"></a>
+  <a href="https://github.com/XeldarAlz/FFXIV-PvPAutoLB/actions/workflows/release.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/XeldarAlz/FFXIV-PvPAutoLB/release.yml?style=flat-square"></a>
+  <a href="LICENSE.md"><img alt="License" src="https://img.shields.io/github/license/XeldarAlz/FFXIV-PvPAutoLB?style=flat-square"></a>
+  <img alt="FFXIV PvP" src="https://img.shields.io/badge/FFXIV-PvP%20only-c8a45e?style=flat-square">
+</p>
+
+<p align="center">
+  <em>Auto-fires your PvP Limit Break at low-HP enemies. Built on Dalamud.</em>
+</p>
+
 ---
 
 ## What it does
