@@ -11,7 +11,7 @@ Closes #
 ## How to test
 
 <!--
-Minimum steps a reviewer can run to verify the change. LastHit is PvP-only, so testing usually means queueing Crystalline Conflict on the affected job. For UI-only changes, describe what to click.
+Minimum steps a reviewer can run to verify the change. PVP Auto LB is PvP-only, so testing usually means queueing Crystalline Conflict on the affected job. For UI-only changes, describe what to click.
 -->
 
 ## Checklist
@@ -19,4 +19,4 @@ Minimum steps a reviewer can run to verify the change. LastHit is PvP-only, so t
 - [ ] `dotnet build -c Release` passes
 - [ ] Verified in-game on the affected job(s)
 - [ ] If this changes user-visible behavior, README is updated
-- [ ] If this touches LB dispatch, relevant `[LastHit]` log lines make the sequence auditable
+- [ ] If this touches LB dispatch, relevant `[PvpAutoLb]` log lines make the sequence auditable

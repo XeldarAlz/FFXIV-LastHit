@@ -1,0 +1,58 @@
+using System;
+using System.Numerics;
+using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Windowing;
+using PvpAutoLb.Core;
+using PvpAutoLb.Windows.Components;
+using PvpAutoLb.Windows.Sections;
+
+namespace PvpAutoLb.Windows;
+
+public sealed class MainWindow : Window, IDisposable
+{
+    private readonly Plugin plugin;
+
+    public MainWindow(Plugin plugin) : base("PVP Auto LB###PvpAutoLbMain")
+    {
+        SizeConstraints = new WindowSizeConstraints
+        {
+            MinimumSize = new Vector2(320, 280),
+            MaximumSize = new Vector2(float.MaxValue, float.MaxValue),
+        };
+        Size = new Vector2(420, 440);
+        SizeCondition = ImGuiCond.FirstUseEver;
+        Flags = ImGuiWindowFlags.NoCollapse;
+        this.plugin = plugin;
+    }
+
+    public void Dispose() { }
+
+    public override void Draw()
+    {
+        var cfg = plugin.Configuration;
+        var ctrl = plugin.Controller;
+        var state = LbDrawState.Resolve(ctrl);
+
+        using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameRounding, 5f);
+        style.Push(ImGuiStyleVar.WindowRounding, 7f);
+        style.Push(ImGuiStyleVar.ChildRounding, 6f);
+        style.Push(ImGuiStyleVar.ItemSpacing, new Vector2(8, 6) * ImGuiHelpers.GlobalScale);
+
+        TopToolbar.Draw(plugin);
+        MasterButton.Draw(cfg);
+        ImGui.Spacing();
+
+        if (cfg.Enabled)
+        {
+            TargetSection.Draw(cfg, ctrl, state);
+            ImGui.Spacing();
+        }
+
+        LbCard.Draw(cfg, ctrl, state);
+        ImGui.Spacing();
+
+        Footer.Draw(ctrl, cfg);
+    }
+}

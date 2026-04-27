@@ -1,4 +1,4 @@
-name: Release LastHitPlugin
+name: Release PvpAutoLb
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     runs-on: windows-2022
 
     env:
-      Solution_Name: LastHitPlugin
+      Solution_Name: PvpAutoLb
 
     steps:
       - name: Checkout
@@ -49,7 +49,7 @@ jobs:
       - name: Stamp version into csproj
         shell: pwsh
         run: |
-          $path = 'LastHitPlugin/LastHitPlugin.csproj'
+          $path = 'PvpAutoLb/PvpAutoLb.csproj'
           $xml = [xml](Get-Content -Raw -Path $path)
           $xml.Project.PropertyGroup.Version = '${{ steps.ver.outputs.VERSION }}'
           $xml.Save((Resolve-Path $path).Path)
@@ -66,7 +66,7 @@ jobs:
       - name: Stage latest.zip
         shell: pwsh
         run: |
-          $src = 'LastHitPlugin/bin/x64/Release/LastHitPlugin/latest.zip'
+          $src = 'PvpAutoLb/bin/x64/Release/PvpAutoLb/latest.zip'
           if (-not (Test-Path $src)) { throw "SDK-built plugin zip not found at $src" }
           Copy-Item $src 'latest.zip' -Force
 
@@ -96,7 +96,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add repo.json LastHitPlugin/LastHitPlugin.csproj
+          git add repo.json PvpAutoLb/PvpAutoLb.csproj
           if (-not (git status --porcelain)) {
             Write-Host 'No changes to commit.'
             exit 0

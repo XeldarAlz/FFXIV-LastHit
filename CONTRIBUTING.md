@@ -5,20 +5,20 @@ Thanks for taking an interest. This is a small solo project, but PRs are welcome
 ## Quick start
 
 ```bash
-git clone --recurse-submodules https://github.com/XeldarAlz/FFXIV-LastHit.git
-cd FFXIV-LastHit
-dotnet build LastHitPlugin.sln -c Release
+git clone --recurse-submodules https://github.com/XeldarAlz/FFXIV-PvPAutoLB.git
+cd FFXIV-PvPAutoLB
+dotnet build PvpAutoLb.sln -c Release
 ```
 
 You need the .NET 9 SDK. The plugin requires Dalamud at runtime; CI pulls a Dalamud dev build automatically and that's enough to compile. See `.github/workflows/pr-build.yml` if you want to reproduce CI locally.
 
-Load the built plugin via `/xlsettings` → **Experimental** → **Dev Plugin Locations**, pointing at `LastHitPlugin/bin/x64/Release/LastHitPlugin/LastHitPlugin.dll`.
+Load the built plugin via `/xlsettings` → **Experimental** → **Dev Plugin Locations**, pointing at `PvpAutoLb/bin/x64/Release/PvpAutoLb/PvpAutoLb.dll`.
 
 ## Project layout
 
-- `LastHitPlugin/Core/` — HP monitoring, target selection, LB dispatch.
-- `LastHitPlugin/Windows/` — ImGui status and settings windows.
-- `LastHitPlugin/` — plugin entry points, config, command wiring.
+- `PvpAutoLb/Core/` — HP monitoring, target selection, LB dispatch.
+- `PvpAutoLb/Windows/` — ImGui status and settings windows.
+- `PvpAutoLb/` — plugin entry points, config, command wiring.
 - `ECommons/` — submodule, shared Dalamud helpers. Don't patch this directly; upstream it.
 
 Keep logic small and direct. This plugin has one job.
@@ -26,7 +26,7 @@ Keep logic small and direct. This plugin has one job.
 ## Before you open a PR
 
 1. `dotnet build -c Release` cleanly.
-2. Test in-game on at least one PvP job, in an actual Crystalline Conflict match. LastHit is PvP-only — nothing else counts as "tested."
+2. Test in-game on at least one PvP job, in an actual Crystalline Conflict match. PVP Auto LB is PvP-only — nothing else counts as "tested."
 3. Keep the diff focused. One concern per PR.
 4. Match the existing style. No heavy abstractions "for later."
 5. If your change affects what a user sees or types (commands, window layout, settings), update the README.
@@ -40,7 +40,7 @@ Check the tracker for anything labeled `good first issue`. The per-job LB verifi
 1. Confirm the action IDs (base LB and any follow-ups).
 2. Add/adjust the mapping.
 3. Test in a real CC match with that job. Note any targeting specifics (ground-targeted, self-buff, chained) in the PR.
-4. Make sure the `[LastHit]` log lines make the sequence auditable.
+4. Make sure the `[PvpAutoLb]` log lines make the sequence auditable.
 
 ## Security
 

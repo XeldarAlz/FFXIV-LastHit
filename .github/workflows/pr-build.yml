@@ -1,4 +1,4 @@
-name: PR Builder for LastHitPlugin
+name: PR Builder for PvpAutoLb
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-2022
 
     env:
-      Solution_Name: LastHitPlugin
+      Solution_Name: PvpAutoLb
 
     steps:
     - name: Checkout
@@ -34,7 +34,7 @@ jobs:
     - name: Store artifacts
       uses: actions/upload-artifact@v7
       with:
-        name: LastHitPlugin
-        path: .\LastHitPlugin\bin\x64\Release\LastHitPlugin\*
+        name: PvpAutoLb
+        path: .\PvpAutoLb\bin\x64\Release\PvpAutoLb\*
         if-no-files-found: error
         retention-days: 1

@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to file a bug. LastHit is PvP-only — please make sure your report is from a PvP context.
+        Thanks for taking the time to file a bug. PVP Auto LB is PvP-only — please make sure your report is from a PvP context.
 
   - type: textarea
     id: what-happened
@@ -59,7 +59,7 @@ body:
     attributes:
       label: Logs / error text
       description: |
-        Relevant lines from `/xllog`. Filter by `[LastHit]` if you can.
+        Relevant lines from `/xllog`. Filter by `[PvpAutoLb]` if you can.
       render: shell
 
   - type: textarea
