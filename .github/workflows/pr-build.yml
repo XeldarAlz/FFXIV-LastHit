@@ -24,8 +24,11 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Download Dalamud
+      # Track staging while API 15 / Patch 7.50 is in beta — release channel is
+      # still API 14 and won't satisfy ECommons master. Revert to /latest.zip
+      # once Dalamud 15 GAs.
       run: |
-        Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
+        Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
         Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
 
     - name: Build with dotnet
